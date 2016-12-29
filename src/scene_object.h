@@ -1,10 +1,8 @@
 /***********************************************************
-     Starter code for Assignment 3
+    Some boilerplate code written by Jack Wang, University
+    of Toronto.
 
-     This code was originally written by Jack Wang for
-		    CSC418, SPRING 2005
-
-		classes defining primitives in the scene
+    classes defining primitives in the scene
 
 ***********************************************************/
 
@@ -18,26 +16,26 @@ bool quadraticEqnSolver(double A, double B, double C, double *root_1, double *ro
 // here.
 class SceneObject {
 public:
-	// Returns true if an intersection occured, false otherwise.
-	virtual bool intersect( Ray3D&, const Matrix4x4&, const Matrix4x4& ) = 0;
+  // Returns true if an intersection occured, false otherwise.
+  virtual bool intersect( Ray3D&, const Matrix4x4&, const Matrix4x4& ) = 0;
 };
 
 // Example primitive you can create, this is a unit square on 
 // the xy-plane.
 class UnitSquare : public SceneObject {
 public:
-	bool intersect( Ray3D& ray, const Matrix4x4& worldToModel,
-			const Matrix4x4& modelToWorld );
+  bool intersect( Ray3D& ray, const Matrix4x4& worldToModel,
+      const Matrix4x4& modelToWorld );
 };
 
 class UnitSphere : public SceneObject {
 public:
-	bool intersect( Ray3D& ray, const Matrix4x4& worldToModel,
-			const Matrix4x4& modelToWorld );
+  bool intersect( Ray3D& ray, const Matrix4x4& worldToModel,
+      const Matrix4x4& modelToWorld );
 };
 
 class UnitCylinder : public SceneObject {
 public:
-	bool intersect( Ray3D& ray, const Matrix4x4& worldToModel,
-			const Matrix4x4& modelToWorld ); 
+  bool intersect( Ray3D& ray, const Matrix4x4& worldToModel,
+      const Matrix4x4& modelToWorld ); 
 };
