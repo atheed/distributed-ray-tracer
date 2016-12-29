@@ -1,1 +1,3 @@
 #A Distributed Ray Tracer
+
+Readme to be completed...
