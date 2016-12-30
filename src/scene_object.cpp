@@ -12,17 +12,10 @@
 
 bool UnitSquare::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
     const Matrix4x4& modelToWorld ) {
-  // TODO: implement intersection code for UnitSquare, which is
+  // intersection code for UnitSquare, which is
   // defined on the xy-plane, with vertices (0.5, 0.5, 0), 
   // (-0.5, 0.5, 0), (-0.5, -0.5, 0), (0.5, -0.5, 0), and normal
   // (0, 0, 1).
-  //
-  // Your goal here is to fill ray.intersection with correct values
-  // should an intersection occur.  This includes intersection.point, 
-  // intersection.normal, intersection.none, intersection.t_value.   
-  //
-  // HINT: Remember to first transform the ray into object space  
-  // to simplify the intersection test.
 
   // transform ray into object space
   Point3D q = worldToModel * ray.origin;
@@ -71,15 +64,8 @@ bool UnitSquare::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
 
 bool UnitSphere::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
     const Matrix4x4& modelToWorld ) {
-  // TODO: implement intersection code for UnitSphere, which is centred 
-  // on the origin.  
-  //
-  // Your goal here is to fill ray.intersection with correct values
-  // should an intersection occur.  This includes intersection.point, 
-  // intersection.normal, intersection.none, intersection.t_value.   
-  //
-  // HINT: Remember to first transform the ray into object space  
-  // to simplify the intersection test.
+  // intersection code for UnitSphere, which is centred 
+  // on the origin.
 
   // transform ray into object space
   Point3D q = worldToModel * ray.origin;
@@ -133,8 +119,8 @@ bool UnitCylinder::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
     const Matrix4x4& modelToWorld ) {
   ////////////////////////////////////////////////////////////////////////////
   // --ADVANCED RAY TRACING--
-  // Handling a non-trivial compound object: cylinder (implementation of ray
-  // intersection function)
+  // Handling a non-trivial compound object: cylinder (implementation of ray-
+  // cylinder interection)
   ////////////////////////////////////////////////////////////////////////////
 
   // transform ray into object space
@@ -147,8 +133,8 @@ bool UnitCylinder::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
   /******************************************************************************************
   * Checking if there is an intersection with the roof or floor of the cylinder (i.e. caps)
   *******************************************************************************************/
-  double t_val_top_cap = (0.5 - q[2]) / r[2];			// t_val corresponding to ray-intersection with the top cap
-  double t_val_bottom_cap = (-0.5 - q[2]) / r[2];		// t_val corresponding to ray-intersection with the bottom caps
+  double t_val_top_cap = (0.5 - q[2]) / r[2];       // t_val corresponding to ray-intersection with the top cap
+  double t_val_bottom_cap = (-0.5 - q[2]) / r[2];   // t_val corresponding to ray-intersection with the bottom caps
 
   if (t_val_top_cap <= 0) {
     return false;
@@ -204,7 +190,7 @@ bool UnitCylinder::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
   double root_1 = -B/A + sqrt(discr) / A;
   double root_2 = -B/A - sqrt(discr) / A;
 
-  double t_val_wall = fmin(root_1, root_2);		// pick lower t, because we want the closest intersection
+  double t_val_wall = fmin(root_1, root_2);    // pick lower t, because we want the closest intersection
 
   // if there are no intersections, or if the intersection is behind us, it is not relevant
   if (discr < 0 || t_val_wall < 0)
@@ -246,16 +232,16 @@ bool quadraticEqnSolver(double A, double B, double C, double *root_1, double *ro
   // A*(t_val^2) + B*(t_val) + C = 0
   // return true if a relevant solution was found; false otherwise
 
-  double D = B*B - 4*A*C;				// discriminant = B^2 - AC
+  double D = B*B - 4*A*C;       // discriminant = B^2 - AC
 
-  if (D < 0) {				// no intersections
+  if (D < 0) {        // no intersections
     *root_1 = -1;
     *root_2 = -1;
     return false;
-  } else if (D == 0) {		// one intersection
+  } else if (D == 0) {      // one intersection
     *root_1 = -B / (2*A);
     *root_2 = -B / (2*A);
-  } else {					// two intersections
+  } else {            // two intersections
     // two solutions to the equation 
     *root_1 = (-B + sqrt(D)) / (2*A);
     *root_2 = (-B - sqrt(D)) / (2*A);

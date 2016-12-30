@@ -33,9 +33,9 @@ int EXECUTE_DEPTH_OF_FIELD = 0;
 * SETTINGS FOR THE DIFFERENT MODES
 *************************************************************/
 // Mode: executing depth of field
-int FOCUS_PLANE_POINT_Z = -5;			// z-coord of the focus plane
-int DOF_RAYS_CAST = 40;					// number of rays to cast for depth of field, to randomly perturb and average over
-int APERTURE_SIZE = 2;					// size of the aperture
+int FOCUS_PLANE_POINT_Z = -5;       // z-coord of the focus plane
+int DOF_RAYS_CAST = 40;             // number of rays to cast for depth of field, to randomly perturb and average over
+int APERTURE_SIZE = 2;              // size of the aperture
 /************************************************************/
 
 Raytracer::Raytracer() : _lightSource(NULL) {
@@ -211,7 +211,7 @@ void Raytracer::computeShading( Ray3D& ray ) {
 
     ////////////////////////////////////////////////////////////////////////////
     // --ADVANCED RAY TRACING--
-    // Shadows (1 of the 2 mandatory features), INCLUDING soft shadows (1 of the choose-your-options features)
+    // Shadows, INCLUDING soft shadows
     ////////////////////////////////////////////////////////////////////////////
     Colour rayCol;
     // vector that will point in the direction from the intersection point to the light source,
@@ -230,10 +230,9 @@ void Raytracer::computeShading( Ray3D& ray ) {
       // build the ray for the shadow at this perturbation (i.e. one part of the many rays that
       // make up the simulated area light) with a slight offset from the intersection
       Ray3D r = Ray3D(ray.intersection.point + 0.005 * l, l);
-      traverseScene(_root, r);	// shoot the ray
+      traverseScene(_root, r);      // shoot the ray
       curLight->light->shade(ray);
 
-      // is in shadow if 
       bool isNotInShadow = (r.intersection.none || t_val < r.intersection.t_value);
 
       // if the object is not in shadow, we want the ray.col colour, so we ensure that we 
@@ -276,24 +275,21 @@ Colour Raytracer::shadeRay( Ray3D& ray ) {
   // Don't bother shading if the ray didn't hit 
   // anything.
   if (!ray.intersection.none) {
-    computeShading(ray); 
-
-    // You'll want to call shadeRay recursively (with a different ray, 
-    // of course) here to implement reflection/refraction effects.
+    computeShading(ray);
 
     ////////////////////////////////////////////////////////////////////////////
     // --ADVANCED RAY TRACING--
-    // Reflection (1 of the 2 mandatory features)
+    // Reflection
     ////////////////////////////////////////////////////////////////////////////
 
     // find the reflected ray from the object, and compute the colour of the ray
-    Vector3D v = -ray.dir;						// reflected ray sent out from intersection pt
+    Vector3D v = -ray.dir;            // reflected ray sent out from intersection pt
     v.normalize();
 
-    Vector3D n = ray.intersection.normal;		// normal at intersection pt
+    Vector3D n = ray.intersection.normal;     // normal at intersection pt
     n.normalize();
 
-    Vector3D reflectedVector = -v - 2 * ((-v).dot(n)) * n;	// the mirrored/reflected direction given n and v
+    Vector3D reflectedVector = -v - 2 * ((-v).dot(n)) * n;    // the mirrored/reflected direction given n and v
     reflectedVector.normalize();
 
     Ray3D reflectedRay = Ray3D(ray.intersection.point + 0.005 * reflectedVector, reflectedVector);
@@ -306,7 +302,7 @@ Colour Raytracer::shadeRay( Ray3D& ray ) {
     if (reflectedRay.intersection.t_value > 0 && reflectedRay.intersection.t_value < 5.0) {
       double reflectionBackoff = fabs(1.0 / reflectedRay.intersection.t_value);
       if (reflectionBackoff > 0.75) {
-        reflectionBackoff = 0.75;		// disallow the backoff coefficient from being too high
+        reflectionBackoff = 0.75;     // disallow the backoff coefficient from being too high
       }
       col = ray.col + reflectionBackoff*reflectedRay.col;
     } else {
@@ -422,7 +418,7 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 
                 Ray3D ray;
                 ray.origin = viewToWorld * current_ray_origin;
-                ray.dir = viewToWorld * (intsctPtFocus - current_ray_origin);   // direction is from the origin to the focus point
+                ray.dir = viewToWorld * (intsctPtFocus - current_ray_origin);     // direction is from the origin to the focus point
                 
                 // run shade() for this ray, and update the accumulated colour value
                 DOFcolour = DOFcolour + shadeRay(ray);
@@ -438,11 +434,11 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
               _bbuffer[i*width+j] += int(DOFcolour[2]*255/num_antialias_rays);
 
             } else {
-              // TODO: Convert ray to world space and call
-              // shadeRay(ray) to generate pixel colour. 
+              // Convert ray to world space and call
+              // shadeRay(ray) to generate pixel colour.
               Ray3D ray;
               ray.origin = viewToWorld * origin;
-              ray.dir = viewToWorld * (imagePlane - origin);   // direction is from the origin to the image-plane
+              ray.dir = viewToWorld * (imagePlane - origin);      // direction is from the origin to the image-plane
 
               Colour col = shadeRay(ray);
               
@@ -501,7 +497,7 @@ int main(int argc, char* argv[])
   Vector3D up(0, 1, 0);
   double fov = 60;
 
-  // Defines a material for shading.
+  // Defines materials for shading.
   Material gold( Colour(0.24725, 0.1995, 0.0745), Colour(0.75164, 0.60648, 0.22648), 
       Colour(0.628281, 0.555802, 0.366065), 
       51.2 );
